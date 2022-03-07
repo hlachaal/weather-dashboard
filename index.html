@@ -23,8 +23,8 @@
             <div class="search-section">
                 <h1><a href="index.html" class="logo">Weather<span>Check the forecast by city</span></a>
                 </h1>
-
                 <div class="mb-5 px-4">
+                    <!-- search form -->
                     <form id="search" action="#">
                         <div class="form-group d-flex">
                             <div class="input-group">
@@ -37,7 +37,7 @@
                         </div>
                     </form>
                 </div>
-                <!-- Search history section -->
+                <!-- search history -->
                 <ul id="search-history" class="components mb-5">
                 </ul>
             </div>
@@ -45,14 +45,11 @@
 
         <div id="content" class="p-3">
             <div class="row">
-                <div id="current-city-container">
-                    <!-- current weather -->
+                <!-- live weather -->
+                <div id="live-weather">
+
                 </div>
             </div>
-
-            <!--- 5-day forecast container-->
-            <h3 id="five-day" class="mt-1"></h3>
-            <div id="forecast-container" class="row"></div>
         </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

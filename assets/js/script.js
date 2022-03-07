@@ -12,6 +12,7 @@ var weatherData = {
     curWeatherData: [],
     forecastData: [],
 };
+var todaysDate = moment().format("L");
 
 // create the weather API endpoint
 function getCityWeatherAPIURL(city) {
@@ -34,7 +35,7 @@ function getForecastAPIUrl(lat, lon) {
     return forecastAPIURL;
 }
 
-// get the weather data for a  city
+// get the weather data
 function getWeatherData(city) {
     var cityInfoUrl = getCityWeatherAPIURL(city);
     fetch(cityInfoUrl).then(function (cityResp) {
@@ -53,6 +54,7 @@ function getWeatherData(city) {
                         weatherData["latitude"],
                         weatherData["longitude"]
                     );
+                    // get the forecast data
                     fetch(forecastUrl).then(function (forecastResp) {
                         if (forecastResp.ok) {
                             forecastResp
@@ -99,23 +101,42 @@ function loadCities() {
 
 var displaySearchedCities = function (city) {
     var li = $('<li />');
-    var ahref = $('<a />', {
+    var aHref = $('<a />', {
         text: city, href: '#', click: function () {
             getWeatherData(city);
         }
     });
-    $('#search-history').append(li.append(ahref));
+    $('#search-history').append(li.append(aHref));
 };
 
 var displayWeather = function () {
-    var city = weatherData["city"];
     var data = weatherData["forecastData"];
-    console.log("display weather", city, data);
+    var temperature = Math.round(data.current.temp);
+    var humidity = Math.round(data.current.humidity);
+    var windSpeed = data.current.wind_speed;
+    var uv = data.current.uvi;
+    var icon = data.current.weather[0].icon;
+    var headerCityDate = $('<h2 />', { text: weatherData["city"] + "   (" + todaysDate + ")" });
+    var imageIcon = $('<img />', {
+        src: "https://openweathermap.org/img/wn/" + icon + "@2x.png"
+    });
+    var uvPa = $('<p />', { text: "UV Index: " });
+    var uvSpan = $('<span />', {
+        text: uv,
+        class: function () {
+            if (uv <= 4) return "bg-success text-white p-2"; else if (uv <= 8) return "bg-warning text-black p-2"; else return "bg-danger text-white p-2";
+        }
+    });
+    var tempPa = $('<p />', { text: "Temperature: " + temperature + "°F" });
+    var humidityPa = $('<p />', { text: "Humidity: " + humidity + "%" });
+    var windSpeedPa = $('<p />', { text: "Wind Speed: " + windSpeed + " MPH" });
+    $('#live-weather').empty().addClass("text-center").append(headerCityDate, imageIcon, tempPa, humidityPa, windSpeedPa, $(uvPa).append(uvSpan));
 };
 
 var displayForecast = function () {
     data = weatherData["forecastData"];
-    console.log("display forecast", data);
+    //console.log("display forecast", data);
+
     // empty input
     $("#filter").val(null);
 };

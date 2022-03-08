@@ -15,3 +15,10 @@ li {
         min-width: 100%;
     }
 }
+@media (max-width: 642px) {
+    .card {
+        margin-right: 0!important;
+        padding: 0!important;
+        width: 94%;
+    }
+}

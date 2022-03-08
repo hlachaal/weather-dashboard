@@ -1,6 +1,13 @@
 #sidebar {
     background-image: url(../images/bg_1.jpg);
 }
+#content {
+    background-color: #73BEF1;
+    color: white;
+}
+li {
+    list-style: none;
+}
 /* Medium devices (tablets, 768px and up) */
 @media (max-width: 992px) {
     #sidebar {

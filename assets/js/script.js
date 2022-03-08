@@ -12,7 +12,7 @@ var weatherData = {
     curWeatherData: [],
     forecastData: [],
 };
-var todaysDate = moment().format("L");
+var todaysDate = moment().format("dddd, MMMM Do YYYY");
 
 // create the weather API endpoint
 function getCityWeatherAPIURL(city) {
@@ -118,8 +118,8 @@ var displayWeather = function () {
     var windSpeed = data.current.wind_speed;
     var uv = data.current.uvi;
     var icon = data.current.weather[0].icon;
-    var headerCityDate = $('<h2 />', { text: weatherData["city"] + "   (" + todaysDate + ")" });
-    var weatherCondition = $('<h5 />', { text: "The weather conditions at this moment:" });
+    var headerCityDate = $('<h2 />', { class: "text-white", text: weatherData["city"] });
+    var weatherCondition = $('<h5 />', { class: "text-white", text: "The weather conditions for today, " + todaysDate + " :" });
     var imageIcon = $('<img />', {
         src: "https://openweathermap.org/img/wn/" + icon + "@2x.png"
     });
@@ -127,7 +127,7 @@ var displayWeather = function () {
     var uvSpan = $('<span />', {
         text: uv,
         class: function () {
-            if (uv <= 4) return "bg-success text-white p-2"; else if (uv <= 8) return "bg-warning text-black p-2"; else return "bg-danger text-white p-2";
+            if (uv <= 4) return "bg-success text-white p-2 rounded"; else if (uv <= 8) return "bg-warning text-black p-2 rounded"; else return "bg-danger text-white p-2 rounded";
         }
     });
     var tempPa = $('<p />', { text: "Temperature: " + temperature + "°F" });
@@ -139,15 +139,15 @@ var displayWeather = function () {
 // displaying hte forecast data for the next 5 days
 var displayForecast = function () {
     data = weatherData["forecastData"];
-    var forecast = $("#forecast").empty().append($('<h5 />', { text: "The forecast of the incoming 5 days:" }), $("<div />", { class: "row justify-content-between" }));
+    var forecast = $("#forecast").empty().append($('<h5 />', { class: "text-white", text: "The forecast of the incoming 5 days:" }), $("<div />", { class: "row justify-content-between" }));
     for (var i = 0; i < 5; i++) {
         var temperature = Math.round(data.daily[i].temp.day);
         var humidity = data.daily[i].humidity;
         var windSpeed = data.daily[i].wind_speed;
         var icon = data.daily[i].weather[0].icon;
-        var card = $("<div />", { class: "card bg-dark text-white text-center col-xl-3 col-md-5 m-3" });
+        var card = $("<div />", { class: "card bg-transparent border-white text-center col-xl-3 col-md-5 m-3" });
         var cardBody = $("<div />", { class: "card-body" });
-        var cardDate = $("<h6 />", { text: moment().add(i, "days").format("L") });
+        var cardDate = $("<h6 />", { text: moment().add(i, "days").format("dddd, MMMM Do YYYY") });
         var cardIcon = $("<img />", { src: "https://openweathermap.org/img/wn/" + icon + "@2x.png" });
         var cardTemp = $("<p />", { class: "card-text", text: "Temperature:  " + temperature + "°F" });
         var cardWindSpeed = $("<p />", { class: "card-text", text: "Wind speed:  " + windSpeed + " MPH" });
@@ -164,9 +164,7 @@ var displayForecast = function () {
 $("#search").on("submit", function (event) {
     event.preventDefault();
     var cityInput = $('#filter').val().trim();
-    if (cityInput) {
-        getWeatherData(cityInput);
-    }
+    if (cityInput) getWeatherData(cityInput); else alert("Please enter a valid city name.");
 })
 
 

@@ -99,6 +99,7 @@ function loadCities() {
     }
 }
 
+// display searched cities
 var displaySearchedCities = function (city) {
     var li = $('<li />');
     var aHref = $('<a />', {
@@ -109,6 +110,7 @@ var displaySearchedCities = function (city) {
     $('#search-history').append(li.append(aHref));
 };
 
+//displaying the city weather condition
 var displayWeather = function () {
     var data = weatherData["forecastData"];
     var temperature = Math.round(data.current.temp);
@@ -117,6 +119,7 @@ var displayWeather = function () {
     var uv = data.current.uvi;
     var icon = data.current.weather[0].icon;
     var headerCityDate = $('<h2 />', { text: weatherData["city"] + "   (" + todaysDate + ")" });
+    var weatherCondition = $('<h5 />', { text: "The weather conditions at this moment:" });
     var imageIcon = $('<img />', {
         src: "https://openweathermap.org/img/wn/" + icon + "@2x.png"
     });
@@ -130,17 +133,34 @@ var displayWeather = function () {
     var tempPa = $('<p />', { text: "Temperature: " + temperature + "°F" });
     var humidityPa = $('<p />', { text: "Humidity: " + humidity + "%" });
     var windSpeedPa = $('<p />', { text: "Wind Speed: " + windSpeed + " MPH" });
-    $('#live-weather').empty().addClass("text-center").append(headerCityDate, imageIcon, tempPa, humidityPa, windSpeedPa, $(uvPa).append(uvSpan));
+    $('#live-weather').empty().addClass("text-center").append(headerCityDate, weatherCondition, imageIcon, tempPa, humidityPa, windSpeedPa, $(uvPa).append(uvSpan));
 };
 
+// displaying hte forecast data for the next 5 days
 var displayForecast = function () {
     data = weatherData["forecastData"];
-    //console.log("display forecast", data);
-
+    var forecast = $("#forecast").empty().append($('<h5 />', { text: "The forecast of the incoming 5 days:" }), $("<div />", { class: "row justify-content-between" }));
+    for (var i = 0; i < 5; i++) {
+        var temperature = Math.round(data.daily[i].temp.day);
+        var humidity = data.daily[i].humidity;
+        var windSpeed = data.daily[i].wind_speed;
+        var icon = data.daily[i].weather[0].icon;
+        var card = $("<div />", { class: "card bg-dark text-white text-center col-xl-3 col-md-5 m-3" });
+        var cardBody = $("<div />", { class: "card-body" });
+        var cardDate = $("<h6 />", { text: moment().add(i, "days").format("L") });
+        var cardIcon = $("<img />", { src: "https://openweathermap.org/img/wn/" + icon + "@2x.png" });
+        var cardTemp = $("<p />", { class: "card-text", text: "Temperature:  " + temperature + "°F" });
+        var cardWindSpeed = $("<p />", { class: "card-text", text: "Wind speed:  " + windSpeed + " MPH" });
+        var cardHumidity = $("<p />", { class: "card-text", text: "Humidity:  " + humidity + "%" });
+        $(card).append($(cardBody).append(cardDate, cardIcon, cardTemp, cardHumidity, cardWindSpeed));
+        $(forecast).children("div").append($(card));
+    }
     // empty input
     $("#filter").val(null);
 };
 
+
+// submitting the search form
 $("#search").on("submit", function (event) {
     event.preventDefault();
     var cityInput = $('#filter').val().trim();
@@ -149,6 +169,8 @@ $("#search").on("submit", function (event) {
     }
 })
 
+
+// page load
 $(document).ready(function () {
     var fullHeight = function () {
         $('.js-fullheight').css('height', $(window).height());
@@ -164,6 +186,7 @@ $(document).ready(function () {
     loadCities();
 });
 
+// this will run everytime the user resizes the window and arrenge the display for the screen size
 $(window).on('resize', function () {
     var win = $(this);
     if (win.width() < 992) {
